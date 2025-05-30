@@ -4,7 +4,35 @@ A distributed voting application for Ghana elections using microservices archite
 
 ## Architecture
 
-![Architecture Diagram](https://mermaid.ink/img/pako:eNqNVE1v2zAM_SuETgOaLnGSNsAOA7ZhwIBhQNHDLgNqkbG42JIhyUmC1P99lGwnTtcWPcQS-fjI90iK5xQbTWmWZtpYdKDxGRvQDVjUYLBCB9_QgVGwRQfGgYUKnYYXcPgEDVZQoYEtOFDWGrRQgUdXgwNdgcMGHFZQWrQOXsGiRVOBRQMVGrBYgkVXgwNXgcUGLFZQGnQOXsGhQ1uBQ4sVWnRYgkNfg4NQgcMGHFZQGvIOXsGjR1-BR4cVOvRYgsdQg4dYgccGPFZQGgoOXqHAQFGhwEAVBgxYKCBU6CFW6LEBD1VQGo4cXuGIgaOCI44qHHHEEo6xQo-xQo8NeKyC0nDi8AonDBwVnHBU4YQTlnCKFXqMFXpswGMVlIYzh1c4Y-Co4IyjCmecscQQKwwYKwzYQMCqKA0XDq9wwcBRwQVHFS64YIlhrDDECkNsMOBYFaXhyuEVrhg4KrjiqMIVVywxxgo9xgo9NuCxCkrDjcMr3DBwVHDDUYUbblhijBXGWGHEBiJWRWm4c3iFOwaOCu44qnDHHUuMscIYK4zYQMSqKA0PDq_wwMBRwQNHFR54YIkxVhhihQEbCFgVpeHJ4RWeGDgqeOKowhNPLDHGCmOsMGIDEauiNLw4vMILA0cFLxxVeOGFJcZYYYwVRmwgYlWUhjeHV3hj4KjgjaMKb7yxxBgrjLHCiA1ErIrS8OHwCh8MHBV8cFTh4_-Jf_8Bm-Hl_w)
+```mermaid
+graph TD
+    subgraph "User Interface"
+        A[Voter] -->|Accesses| B[Vote App<br>Flask/Python]
+        C[Admin] -->|Views| D[Results App<br>Node.js]
+    end
+
+    subgraph "Backend Services"
+        B -->|Publishes vote| E[Redis<br>Message Broker]
+        E -->|Consumes vote| F[Worker<br>.NET]
+        F -->|Updates| G[PostgreSQL<br>Database]
+        D -->|Reads| G
+    end
+
+    subgraph "Shared Configuration"
+        H[parties.json] -->|Used by| B
+        H -->|Used by| D
+    end
+
+    subgraph "Admin Operations"
+        I[CLI Commands] -->|Reset votes| G
+    end
+
+    style B fill:#9CF,stroke:#333
+    style D fill:#9CF,stroke:#333
+    style E fill:#FCC,stroke:#333
+    style F fill:#CFC,stroke:#333
+    style G fill:#FCF,stroke:#333
+```
 
 The application consists of several microservices:
 
