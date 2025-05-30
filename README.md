@@ -13,6 +13,19 @@
 
 A distributed voting application for Ghana elections using microservices architecture.
 
+## Screenshots
+
+<div align="center">
+  <p><strong>Voting Interface</strong></p>
+  <img src="screenshots/voting-interface.png" alt="Voting Interface" width="600"/>
+  
+  <p><strong>Vote Confirmation</strong></p>
+  <img src="screenshots/voted-interface.png" alt="Vote Confirmation" width="600"/>
+  
+  <p><strong>Results Dashboard</strong></p>
+  <img src="screenshots/results-dashboard.png" alt="Results Dashboard" width="600"/>
+</div>
+
 ## Table of Contents
 
 1. [Overview](#overview)
