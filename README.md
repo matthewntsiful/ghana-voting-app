@@ -51,6 +51,76 @@ The Ghana Voting Application is a microservices-based system designed to handle 
 
 ```mermaid
 graph TD
+    %% User Interface Layer
+    Voter["Voter (Browser)"]
+    Admin["Admin (Browser)"]
+    
+    %% Frontend Services
+    subgraph "Frontend Services"
+        VoteApp["Vote App<br>Flask/Python<br>Port: 5000"]
+        ResultApp["Result App<br>Node.js/Express<br>Port: 5001"]
+    end
+    
+    %% Backend Services
+    subgraph "Backend Services"
+        Redis["Redis<br>Message Broker"]
+        Worker["Worker Service<br>.NET"]
+        Postgres["PostgreSQL<br>Database"]
+    end
+    
+    %% Configuration
+    Config["Configuration<br>(parties.json)"]
+    
+    %% Data Flow
+    Voter -->|Cast Vote| VoteApp
+    VoteApp -->|Publish| Redis
+    Redis -->|Consume| Worker
+    Worker -->|Update| Postgres
+    ResultApp -->|Read| Postgres
+    Admin -->|View Results| ResultApp
+    
+    %% Configuration Dependencies
+    Config -->|Used by| VoteApp
+    Config -->|Used by| ResultApp
+    
+    %% Styling
+    classDef frontend fill:#4CAF50,color:white,stroke:#45a049,stroke-width:2px
+    classDef backend fill:#2196F3,color:white,stroke:#0b7dda,stroke-width:2px
+    classDef storage fill:#9C27B0,color:white,stroke:#7B1FA2,stroke-width:2px
+    classDef config fill:#FF9800,color:black,stroke:#F57C00,stroke-width:2px
+    
+    class Voter,Admin frontend
+    class VoteApp,ResultApp frontend
+    class Redis,Worker backend
+    class Postgres storage
+    class Config config
+```
+
+### Architecture Overview
+
+The Ghana Voting Application follows a microservices architecture with clear separation of concerns:
+
+1. **Frontend Services**
+   - **Vote App**: Flask-based web application for voters to cast their votes
+   - **Result App**: Node.js/Express application for real-time results visualization
+
+2. **Backend Services**
+   - **Worker Service**: .NET service that processes votes from the queue
+   - **Redis**: Message broker for asynchronous vote processing
+   - **PostgreSQL**: Persistent storage for vote counts and results
+
+3. **Data Flow**
+   - Voters interact with the Vote App to cast their votes
+   - Votes are published to Redis for asynchronous processing
+   - Worker service processes votes and updates the database
+   - Results App queries the database to display real-time statistics
+
+4. **Configuration**
+   - Centralized configuration for political parties and application settings
+   - Environment-based configuration for different deployment environments
+
+```mermaid
+graph TD
     subgraph "User Interface"
         A[Voter] -->|Accesses| B[Vote App<br>Flask/Python]
         C[Admin] -->|Views| D[Results App<br>Node.js]
